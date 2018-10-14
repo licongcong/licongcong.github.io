@@ -80,11 +80,11 @@ tags:
 
 ## <span id="4">4. 稳定性</span>
 
-### 4.1 什么是稳定性
+### <span id="4.1">4.1 什么是稳定性</span>
 
 让原本有相等键值的纪录维持相对次序。
 
-### 4.2 稳定性举例
+### <span id="4.2">4.2 稳定性举例</span>
 
 给定以下元素对`(8, 5), (4, 9), (5, 3), (4, 2)` ，按第**一**个元素的大小进行排序，则有以下两种结果：
 
@@ -101,8 +101,8 @@ tags:
 |  2   | T* generateOrderedSequence(int size)                        | 生成size大小的顺序数组                       |
 |  3   | T* generateNearlyOrderedSequence(int size, int pairs )      | 生成size大小，有pairs组乱序的数组            |
 |  4   | T* generateOppositeOrderedSequence(int size)                | 生成size大小逆序数组                         |
-|  5   | bool isSorted(const T* arr, int size)                       | 判断是否已经完成排序                         |
-|  6   | T* copyArray(const T* arr, int size)                        | 数组拷贝                                     |
+|  5   | bool isSorted(T* arr, int size)                             | 判断是否已经完成排序                         |
+|  6   | T* copyArray(T* arr, int size)                              | 数组拷贝                                     |
 
 ### <span id="5.1">5.1 生成size大小的随机数组</span>
 
