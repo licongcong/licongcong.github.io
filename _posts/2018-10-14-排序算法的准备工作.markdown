@@ -1,0 +1,214 @@
+---
+layout:     post
+title:      "排序算法的准备工作"
+date:       2018-10-14
+author:     "CongcongLi"
+mathjax:    true
+tags:
+    - 数据结构
+    - 算法
+    - 排序
+
+---
+
+## 目录
+
+1. [什么是排序算法](#1)
+2. [算法运行时间](#2)
+   1. [约定](#2.1)
+   2. [一般法则](#2.2)
+3. [算法空间使用](#3)
+4. [稳定性](#4)
+   1. [什么是稳定性](#4.1)
+   2. [稳定性举例](#4.2)
+5. [验证排序算法使用的函数](#5.1)
+   1.  [生成size大小的随机数组](#5.1)
+   2. [生成size大小的顺序数组](#5.2)
+   3. [生成size大小，有pairs组乱序的数组](#5.3)
+   4. [生成size大小逆序数组](#5.4)
+   5. [判断是否已经完成排序](#5.5)
+   6. [数组拷贝](#5.6)
+
+
+
+## <span id="1">1. 什么是排序算法？</span>
+
+> 一个排序算法（Sorting Algorithm）是一种能将一串数据依照特定排序方式进行排列的一种算法。
+
+排序算法输出的两个原则：
+
+* 输出结果为递增序列
+
+* 输出结果是原输入的一种排列、或是重组
+
+
+## <span id="2">2. 算法运行时间</span>
+
+### <span id="2.1">2.1 为了简化分析，采纳如下约定：</span>
+
+* 不采用特定的时间单位，因此可以抛弃常数系数。
+* 计算大$O$运行时间，因此可以抛弃低阶。
+
+### <span id="2.2">2.2 一般法则</span>
+
+1. `for`循环
+
+   $O(for 内语句的运行时间 \times 迭代次数)$
+
+2. 嵌套循环
+
+   $O(语句的运行时间 \times 所有循环的大小的乘积)$
+
+3. 顺序语句
+
+   $\sum各个语句的运行时间$
+
+4. `if/else`语句
+
+   ```C++
+   if condition
+   	S1
+   else
+   	S2
+   ```
+
+   $ O(判断时间 + \max(S1, S2)) $
+
+## <span id="3">3. 算法空间使用</span>
+
+* 内存使用量以及其他计算机资源的使用
+
+## <span id="4">4. 稳定性</span>
+
+### 4.1 什么是稳定性
+
+让原本有相等键值的纪录维持相对次序。
+
+### 4.2 稳定性举例
+
+给定以下元素对`(8, 5), (4, 9), (5, 3), (4, 2)` ，按第**一**个元素的大小进行排序，则有以下两种结果：
+
+1. `(4, 2), (4, 9), (5, 3), (8, 5)`　
+2. `(4, 9), (4, 2), (5, 3), (8, 5)`　
+
+在原来的排列中，`(4, 9)`排在`(4, 2)`前，第一种排序结果改变了这种相对次序，因而不稳定。
+
+## <span id="5">5. 验证排序算法的辅助函数</span>
+
+| No.  | Function                                                    | Comment                                      |
+| :--: | :---------------------------------------------------------- | -------------------------------------------- |
+|  1   | T* generateRandomSequence(int size, int rangeL, int rangeR) | 生成size大小的随机数组，范围[rangeL, rangeR] |
+|  2   | T* generateOrderedSequence(int size)                        | 生成size大小的顺序数组                       |
+|  3   | T* generateNearlyOrderedSequence(int size, int pairs )      | 生成size大小，有pairs组乱序的数组            |
+|  4   | T* generateOppositeOrderedSequence(int size)                | 生成size大小逆序数组                         |
+|  5   | bool isSorted(const T* arr, int size)                       | 判断是否已经完成排序                         |
+|  6   | T* copyArray(const T* arr, int size)                        | 数组拷贝                                     |
+
+### <span id="5.1">5.1 生成size大小的随机数组</span>
+
+```c++
+template <typename T>
+T* generateRandomSequence(int size, int rangeL, int rangeR) {
+    assert(size > 0);
+    T* arr = new T[size];
+
+    assert(rangeL <= rangeR);
+    srand((unsigned int)time(nullptr));
+
+    for (int i=0; i < size; ++i) {
+        arr[i] = rand() % (rangeR - rangeL + 1) + rangeL ;
+    }
+
+    return arr;
+}
+```
+
+### <span id="5.2">5.2 生成size大小的顺序数组</span>
+
+```c++
+template <typename T>
+T* generateRandomSequence(int size, int begin, int end) {
+    assert(size > 0);
+    T* arr = new T[size];
+
+    assert(begin <= end);
+    srand((unsigned int)time(nullptr));
+
+    for (int i=0; i < size; ++i) {
+        arr[i] = rand() % (end - begin + 1) + begin ;
+    }
+
+    return arr;
+}
+```
+
+### <span id="5.3">5.3 生成size大小，有pairs组乱序的数组</span>
+
+```c++
+template <typename T>
+T* generateNearlyOrderedSequence(int size, int pairs) {
+    assert( size > 0 && pairs <= size);
+
+    T* arr = new T[size];
+    for (int i=0; i < size; i++) {
+        arr[i] = i;
+    }
+
+    srand((unsigned int) time(nullptr));
+    int swapX, swapY;
+    for (int i=0; i < pairs; i++) {
+        swapX = rand() % size;
+        swapY = rand() % size;
+        swap(arr[swapX], arr[swapY]);
+    }
+
+    return arr;
+}
+```
+
+### <span id="5.4">5.4 生成size大小逆序数组</span>
+
+```c++
+template <typename T>
+T* generateOppositeSequence(int size) {
+    assert(size > 0);
+
+    T* arr = new T[size];
+
+    for (int i=0; i < size; i++) {
+        arr[i] = size - i - 1;
+    }
+    return arr;
+}
+```
+
+### <span id="5.5">5.5 判断是否已经完成排序</span>
+
+```c++
+template <typename T>
+bool isSorted(T* arr, int size) {
+    for (int i=0; i < size - 1; i++) {
+        if (arr[i] > arr[i+1]) {
+            cout << "Not Sorted!!!" << endl;
+            return false;
+        }
+    }
+    cout << "Sorted!!!" << endl;
+    return true;
+}
+```
+
+### <span id="5.6">5.6 数组拷贝</span>
+
+```c++
+template <typename T>
+T* copyArray(T* arr, int size) {
+    assert(size > 0);
+
+    T* result = new T[size];
+    copy(arr, arr+size, result);
+
+    return result;
+}
+```
+
